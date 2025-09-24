@@ -12,8 +12,11 @@ describe('API Endpoints', () => {
     const response = await request(server).get('/health');
     // Assert that the HTTP status code is 200 (OK)
     expect(response.statusCode).toBe(200);
-    // Assert that the response body is the expected JSON object
-    expect(response.body).toEqual({ status: 'healthy' });
+    // Assert that the response body has the correct status
+    // We're now only checking the 'status' property since the uptime can vary
+    expect(response.body.status).toEqual('ok');
+    // Ensure the uptime property exists, but don't check its value as it's dynamic
+    expect(response.body).toHaveProperty('uptime');
   });
 
   // Test the /api/greet endpoint
