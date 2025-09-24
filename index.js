@@ -24,12 +24,18 @@ app.get('/api/greet', (req, res) => {
     res.json({ message: `Hello, ${name}!` });
 });
 
-// The app listens for connections on the specified port.
-const server = app.listen(port, () => {
-    // Log a message to the console once the server is successfully running.
-    console.log(`App listening on port ${port}`);
-});
-
-// Export the app and the server instance. This is crucial for testing.
+// Export the app for testing
+// This is the crucial part that fixes the hanging issue.
 // We export the app separately so we can test routes without starting the server, and the server itself so we can close it after tests.
-module.exports = { app, server };
+module.exports = app;
+
+// This conditional check ensures the server only starts when the file is run directly (e.g., node index.js)
+// and not when it's imported in a test file.
+if (require.main === module) {
+  const server = app.listen(port, () => {
+      // Log a message to the console once the server is successfully running.
+      console.log(`App listening on port ${port}`);
+  });
+  // Also export the server when run as the main module
+  module.exports.server = server;
+}
