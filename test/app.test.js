@@ -32,9 +32,9 @@ describe('API Endpoints', () => {
 });
 
 // This is the crucial part that fixes the hanging issue.
-// The `afterAll` hook runs after all tests in the suite have completed.
+// The afterAll hook runs after all tests in the suite have completed.
 // It's used to clean up resources, in this case, by closing the server.
-afterAll(done => {
+afterAll(async () => {
   // Gracefully close the server to allow Jest to exit
-  server.close(done);
+  await new Promise(resolve => server.close(resolve));
 });
