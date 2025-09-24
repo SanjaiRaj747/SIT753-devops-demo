@@ -1,43 +1,36 @@
-// Import the express library for building the web server
-const express = require('express');
-// Import the http library to create a server instance
-const http = require('http');
+    // Import the express library
+    const express = require('express');
 
-// Create a new Express application instance
-const app = express();
+    // Create a new express application
+    const app = express();
+    // Define the port the app will run on. It will use the environment variable PORT if available, otherwise it will default to 3000.
+    const port = process.env.PORT || 3000;
 
-// Set the port for the server to listen on
-const port = 3000;
+    // Enable JSON body parsing for the application
+    app.use(express.json());
 
-// Middleware to parse incoming requests with JSON payloads
-app.use(express.json());
+    // Main route to check the application status
+    app.get('/health', (req, res) => {
+        // Send a JSON response with status and uptime
+        res.json({
+            status: 'ok',
+            uptime: process.uptime(),
+        });
+    });
 
-// A simple /health endpoint to check if the app is running
-// This endpoint returns a status of "ok" and the server's uptime
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'ok',
-    uptime: process.uptime()
-  });
-});
+    // An API route that takes a name as a query parameter and returns a greeting
+    app.get('/api/greet', (req, res) => {
+        const name = req.query.name || 'World';
+        res.json({ message: `Hello, ${name}!` });
+    });
 
-// A greet endpoint that takes a name as a query parameter
-app.get('/api/greet', (req, res) => {
-  // Get the name from the request query parameters, defaulting to "World"
-  const name = req.query.name || 'World';
-  // Send a JSON response with a personalized greeting
-  res.json({ message: `Hello, ${name}!` });
-});
+    // The app listens for connections on the specified port.
+    const server = app.listen(port, () => {
+        // Log a message to the console once the server is successfully running.
+        console.log(`App listening on port ${port}`);
+    });
 
-// Create an HTTP server from the Express app
-const server = http.createServer(app);
-
-// Start the server and listen on the specified port
-server.listen(port, () => {
-  // Log a message to the console once the server is successfully running
-  console.log(`App listening on port ${port}`);
-});
-
-// Export the server instance to make it available for testing
-// This is the key change that allows Jest to access the `close` method
-module.exports = server;
+    // Export the app and the server instance. This is crucial for testing.
+    // We export the app separately so we can test routes without starting the server, and the server itself so we can close it after tests.
+    module.exports = { app, server };
+    

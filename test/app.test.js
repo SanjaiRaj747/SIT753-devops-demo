@@ -1,7 +1,7 @@
 // Import the supertest library for making HTTP requests to our app
 const request = require('supertest');
-// Import the app server from your main index.js file
-const server = require('../index');
+// Import the app and server instances from your main index.js file
+const { app, server } = require('../index');
 
 // A simple test suite to group related tests
 describe('API Endpoints', () => {
@@ -9,7 +9,7 @@ describe('API Endpoints', () => {
   // Test the /health endpoint
   it('GET /health - should return health status', async () => {
     // Use supertest to make a GET request to the /health endpoint
-    const response = await request(server).get('/health');
+    const response = await request(app).get('/health');
     // Assert that the HTTP status code is 200 (OK)
     expect(response.statusCode).toBe(200);
     // Assert that the response body has the correct status
@@ -22,7 +22,7 @@ describe('API Endpoints', () => {
   // Test the /api/greet endpoint
   it('GET /api/greet - should return greeting with a name', async () => {
     // Use supertest to make a GET request with a query parameter
-    const response = await request(server).get('/api/greet?name=Jest');
+    const response = await request(app).get('/api/greet?name=Jest');
     // Assert that the HTTP status code is 200 (OK)
     expect(response.statusCode).toBe(200);
     // Assert that the response body is the expected personalized JSON object
