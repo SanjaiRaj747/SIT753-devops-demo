@@ -6,24 +6,24 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'npm install'
-        sh 'docker build -t sample-node-app .'
+        bat 'npm install'
+        bat 'docker build -t sample-node-app .'
       }
     }
     stage('Test') {
-      steps { sh 'npm test' }
+      steps { bat 'npm test' }
     }
     stage('Code Quality') {
-      steps { sh 'npm run lint || true' }
+      steps { bat 'npm run lint || true' }
     }
     stage('Security') {
-      steps { sh 'npm audit --json > audit-output.json || true' }
+      steps { bat 'npm audit --json > audit-output.json || true' }
     }
     stage('Deploy') {
       steps {
-        sh 'docker-compose up -d --build'
-        sh 'sleep 5'
-        sh 'curl --fail http://localhost:3000/health'
+        bat 'docker-compose up -d --build'
+        bat 'sleep 5'
+        bat 'curl --fail http://localhost:3000/health'
       }
     }
     stage('Release') {
@@ -31,7 +31,7 @@ pipeline {
     }
     stage('Monitoring') {
       steps {
-        sh 'curl --fail http://localhost:3000/health || echo "ALERT: app not healthy"'
+        bat 'curl --fail http://localhost:3000/health || echo "ALERT: app not healthy"'
       }
     }
   }
