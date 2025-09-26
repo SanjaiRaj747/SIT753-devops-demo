@@ -11,17 +11,17 @@ app.use(express.json());
 
 // Main route to check the application status
 app.get('/health', (req, res) => {
-    // Send a JSON response with status and uptime
-    res.json({
-        status: 'ok',
-        uptime: process.uptime(),
-    });
+  // Send a JSON response with status and uptime
+  res.json({
+    status: 'ok',
+    uptime: process.uptime(),
+  });
 });
 
 // An API route that takes a name as a query parameter and returns a greeting
 app.get('/api/greet', (req, res) => {
-    const name = req.query.name || 'World';
-    res.json({ message: `Hello, ${name}!` });
+  const name = req.query.name || 'World';
+  res.json({ message: `Hello, ${name}!` });
 });
 
 // A conditional check to ensure the server only starts when the file is run directly.
