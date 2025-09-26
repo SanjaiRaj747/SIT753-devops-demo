@@ -1,7 +1,7 @@
 // Import the supertest library for making HTTP requests to our app
 const request = require('supertest');
 // Import the app and server instances from your main index.js file
-const { app, server } = require('../index');
+const { app } = require('../index');
 
 // A simple test suite to group related tests
 describe('API Endpoints', () => {
@@ -29,12 +29,4 @@ describe('API Endpoints', () => {
     expect(response.body).toEqual({ message: 'Hello, Jest!' });
   });
 
-});
-
-// This is the crucial part that fixes the hanging issue.
-// The afterAll hook runs after all tests in the suite have completed.
-// It's used to clean up resources, in this case, by closing the server.
-afterAll(async () => {
-  // Gracefully close the server to allow Jest to exit
-  await new Promise(resolve => server.close(resolve));
 });
