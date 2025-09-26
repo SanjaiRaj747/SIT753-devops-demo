@@ -24,12 +24,15 @@ app.get('/api/greet', (req, res) => {
     res.json({ message: `Hello, ${name}!` });
 });
 
-// Create the server by having the app listen on a specified port.
-const server = app.listen(port, () => {
+// A conditional check to ensure the server only starts when the file is run directly.
+// This prevents the server from starting when it's imported for testing.
+let server;
+if (require.main === module) {
+  server = app.listen(port, () => {
     // Log a message to the console once the server is successfully running.
     console.log(`App listening on port ${port}`);
-});
+  });
+}
 
-// Export the app and the server instance unconditionally.
-// This ensures they are always available for the test suite.
+// Export the app and the server instance so they are always available for the test suite.
 module.exports = { app, server };
