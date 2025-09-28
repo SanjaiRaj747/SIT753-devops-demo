@@ -6,12 +6,13 @@ pipeline {
         PATH = "${tool 'NodeJS 18.17.1'}/bin:${env.PATH}"
     }
 
-    // UPDATED: Changed the names in the tools section for better compatibility
+    // UPDATED: Changed the SonarQube tool type from 'sonarRunner' to 'msbuildSonarRunner'
+    // This aligns with one of the specific valid tool types listed in your last error message.
     tools {
         // The name 'NodeJS 18.17.1' MUST match the name in Manage Jenkins > Tools > NodeJS Installations
         nodejs 'NodeJS 18.17.1' 
-        // Changed from 'sonarScanner' to 'sonarRunner' to match Jenkins' plugin tool ID
-        sonarRunner 'SonarQube Scanner' 
+        // Using 'msbuildSonarRunner' as the tool type to ensure compatibility
+        msbuildSonarRunner 'SonarQube Scanner' 
     }
 
     stages {
