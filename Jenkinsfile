@@ -6,13 +6,13 @@ pipeline {
         PATH = "${tool 'NodeJS 18.17.1'}/bin:${env.PATH}"
     }
 
-    // UPDATED: The SonarQube installation name is now 'sonar-scanner'
+    // UPDATED: Changing the tool type to the older, more general 'sonar' to resolve the tool type error.
+    // The installation name ('sonar-scanner') remains unchanged.
     tools {
         // The name 'NodeJS 18.17.1' MUST match the name in Manage Jenkins > Tools > NodeJS Installations
         nodejs 'NodeJS 18.17.1' 
-        // The installation name is now 'sonar-scanner'. 
-        // You MUST change the name in Manage Jenkins > Tools to 'sonar-scanner'.
-        sonarRunner 'sonar-scanner' 
+        // Trying 'sonar' as the tool type. The installation name 'sonar-scanner' MUST match the name in Jenkins Tools.
+        sonar 'sonar-scanner' 
     }
 
     stages {
