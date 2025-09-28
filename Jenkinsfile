@@ -6,13 +6,12 @@ pipeline {
         PATH = "${tool 'NodeJS 18.17.1'}/bin:${env.PATH}"
     }
 
-    // You must have your SonarQube token as a Jenkins secret with the ID 'sonarqube-token'
-    // This is not part of your GitHub repository for security reasons
+    // UPDATED: Changed the names in the tools section for better compatibility
     tools {
-        nodejs 'node'
-        // 'SonarQube Scanner' is the name you gave to the tool in Manage Jenkins -> Tools
-        // You MUST configure this for this stage to work
-        sonarScanner 'SonarQube Scanner'
+        // The name 'NodeJS 18.17.1' MUST match the name in Manage Jenkins > Tools > NodeJS Installations
+        nodejs 'NodeJS 18.17.1' 
+        // Changed from 'sonarScanner' to 'sonarRunner' to match Jenkins' plugin tool ID
+        sonarRunner 'SonarQube Scanner' 
     }
 
     stages {
@@ -45,14 +44,14 @@ pipeline {
             steps {
                 echo 'Running code quality checks...'
                 // Run ESLint and continue even if it fails.
-                // The `catchError` block prevents the pipeline from failing immediately.
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     bat 'npm run lint'
                 }
 
                 // Run SonarQube analysis
-                // 'MySonar' is the name you gave your SonarQube server in Jenkins configuration
+                // 'MySonar' MUST match the name in Manage Jenkins > System > SonarQube Servers
                 withSonarQubeEnv('MySonar') {
+                    // sonar-scanner is the command run by the 'SonarQube Scanner' tool installed above
                     bat 'sonar-scanner -Dsonar.projectKey=sample-node-app -Dsonar.sources=.'
                 }
             }
@@ -95,6 +94,7 @@ pipeline {
                 echo 'Checking application health...'
                 script {
                     // Check the health endpoint and store the response code
+                    // Note: You must have 'curl' installed and available in your Windows environment's PATH for this to work.
                     def status = bat(script: "curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/health", returnStdout: true).trim()
 
                     // If the status is not 200, trigger an alert
